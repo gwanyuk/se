@@ -6,3 +6,5 @@
 
 
 [과제 1] 대상 시스템 품질 요소 추정 : [doc/quality_factors.md](./doc/quality_factors.md)
+
+[과제 2] 프로젝트 관리 계획서 : [doc/Project_Management_Plan.md](./doc/Project_Management_Plan.md)
