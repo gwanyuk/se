@@ -14,8 +14,7 @@
 | **세분화된 권한** | 파일 공유 시 부여하는 조회, 수정, 댓글 등의 구체적인 권한 수준 |
 
 ### 1.3 참조 문서
-* [프로젝트 정의서](doc/project_definition.md)
-* [프로젝트 관리 계획서](doc/Project_Management_Plan.md)
+* [프로젝트 정의서 (시스템 정의서)](doc/project_definition.md)
 * [대상 시스템 품질 요소 측정](doc/quality_factors.md)
 
 ---
@@ -96,11 +95,9 @@ graph LR
 
 ---
 
-## 3. 요구사항 명세 (구조 및 행위 관점)
+## 3. 요구사항 명세
 
-### 3.1 정적 분석 (구조 관점)
-
-#### 3.1.1 클래스 다이어그램
+### 3.1 정적 분석
 ```mermaid
 classDiagram
     class User {
@@ -137,6 +134,54 @@ classDiagram
     Directory "1" -- "0..*" File : contains >
     File "1" -- "0..*" VersionHistory : tracks >
     File "1" -- "0..1" SharedLink : shares via >
+```
+
+### 3.2 CRC 카드
+| Class Name | User (사용자) | ID: 01 |
+| :--- | :--- | :--- |
+| **Description** | 시스템을 이용하는 사용자의 정보를 나타낸다. | **Type:** Concrete, Domain |
+| **Responsibilities** | - 파일 업로드/다운로드 요청<br>- 공유 링크 생성 요청 | **Collaborators** | File, SharedLink |
+| **Attributes** | email: String<br>password: String<br>userRole: Role | |
+
+| Class Name | File (파일) | ID: 02 |
+| :--- | :--- | :--- |
+| **Description** | 시스템에 저장된 파일의 메타데이터와 상태를 나타낸다. | **Type:** Concrete, Domain |
+| **Responsibilities** | - 파일 정보(크기, 경로) 제공<br>- 파일 삭제 및 검색 지원 | **Collaborators** | User, Directory |
+| **Attributes** | fileId: String<br>fileName: String<br>fileType: String<br>uploadDate: Date | |
+
+### 3.3 동적 분석
+```mermaid
+sequenceDiagram
+    actor U as 사용자
+    participant UI as 시스템UI
+    participant DB as 시스템DB
+    
+    U->>UI: 1. 파일 선택 및 업로드 요청
+    UI->>DB: 2. 사용자 남은 용량 확인 요청
+    
+    alt 용량 충분 (Success)
+        DB-->>UI: 3. 용량 확인 완료
+        UI->>DB: 4. 파일 데이터 전송 및 저장
+        DB-->>UI: 5. 저장 완료 응답
+        UI-->>U: 6. 업로드 성공 메시지 출력
+    else 용량 부족 (Fail)
+        DB-->>UI: 3. 용량 초과 에러
+        UI-->>U: 4. 업로드 실패 메시지 출력
+    end
+```
+
+### 3.4 상태 관점 (상태기계 다이어그램)
+```mermaid
+stateDiagram-v2
+    [*] --> Uploading : 파일 선택 및 업로드 시작
+    Uploading --> Saved : 업로드 완료 및 DB 저장
+    Uploading --> Failed : 네트워크 오류 또는 용량 부족
+    Saved --> Shared : 공유 링크 생성됨
+    Shared --> Saved : 공유 링크 삭제됨
+    Saved --> Deleted : 사용자가 파일 삭제
+    Shared --> Deleted : 사용자가 파일 삭제
+    Deleted --> [*]
+    Failed --> [*]
 ```
 
 ---
