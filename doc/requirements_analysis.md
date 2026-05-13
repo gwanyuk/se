@@ -15,6 +15,7 @@
 
 ### 1.3 참조 문서
 * [프로젝트 정의서 (시스템 정의서)](doc/project_definition.md)
+* [프로젝트 관리 계획서](doc/Project_Management_Plan.md)
 * [대상 시스템 품질 요소 측정](doc/quality_factors.md)
 
 ---
