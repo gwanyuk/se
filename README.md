@@ -12,3 +12,5 @@
 [과제 3] 요구사항 정의서 : [doc/requirements_definition.md](./doc/requirements_definition.md)
 
 [과제 4] 요구사항 분석서 : [doc/requirements_analysis.md](./doc/requirements_analysis.md)
+
+[과제 5] 테스트 보고서 : [doc/test_report.md](./doc/test_report.md)
